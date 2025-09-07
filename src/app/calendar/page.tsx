@@ -1,20 +1,23 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import TodoList from '@/components/TodoList';
+import Calendar from '@/components/Calendar';
 import AddTodoForm from '@/components/AddTodoForm';
+import TodoList from '@/components/TodoList';
+import { startOfDay, endOfDay, isSameDay } from 'date-fns';
 
 interface Todo {
   id: number;
   title: string;
   description?: string;
-  isCompleted: boolean;
-  dueDate?: Date;
+  dueDate: Date;
   priority: 'low' | 'medium' | 'high';
+  isCompleted: boolean;
 }
 
-export default function Home() {
+export default function CalendarPage() {
   const [todos, setTodos] = useState<Todo[]>([]);
+  const [selectedDate, setSelectedDate] = useState(new Date());
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -38,6 +41,13 @@ export default function Home() {
     fetchTodos();
   }, []);
 
+  // 获取选中日期的待办事项
+  const getSelectedDateTodos = () => {
+    return todos.filter((todo) =>
+      isSameDay(new Date(todo.dueDate), selectedDate)
+    );
+  };
+
   // 添加新的待办事项
   const handleAddTodo = async (newTodo: {
     title: string;
@@ -51,7 +61,10 @@ export default function Home() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(newTodo),
+        body: JSON.stringify({
+          ...newTodo,
+          dueDate: selectedDate,
+        }),
       });
 
       if (!response.ok) {
@@ -62,36 +75,6 @@ export default function Home() {
       setTodos([...todos, todo]);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to add todo');
-    }
-  };
-
-  // 更新待办事项
-  const handleEditTodo = async (
-    id: number,
-    updatedTodo: {
-      title: string;
-      description?: string;
-      dueDate?: Date;
-      priority: 'low' | 'medium' | 'high';
-    }
-  ) => {
-    try {
-      const response = await fetch(`/api/todos/${id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(updatedTodo),
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to update todo');
-      }
-
-      const updated = await response.json();
-      setTodos(todos.map((todo) => (todo.id === id ? updated : todo)));
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to update todo');
     }
   };
 
@@ -162,29 +145,42 @@ export default function Home() {
   }
 
   return (
-    <main className="min-h-screen bg-gray-100">
-      <div className="container mx-auto px-4 py-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-8">待办事项</h1>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <div>
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">
-              添加新待办事项
-            </h2>
-            <AddTodoForm onAdd={handleAddTodo} />
-          </div>
-          <div>
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">
-              待办事项列表
-            </h2>
-            <TodoList
+    <main className="min-h-screen bg-gray-100 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* 日历视图 */}
+          <div className="lg:col-span-2">
+            <Calendar
               todos={todos}
-              onToggleComplete={handleToggleComplete}
-              onDelete={handleDelete}
-              onEdit={handleEditTodo}
+              selectedDate={selectedDate}
+              onDateSelect={setSelectedDate}
             />
+          </div>
+
+          {/* 右侧栏 */}
+          <div className="space-y-8">
+            {/* 添加待办事项表单 */}
+            <div className="bg-white rounded-lg shadow p-6">
+              <h2 className="text-lg font-semibold text-gray-900 mb-4">
+                添加新待办事项
+              </h2>
+              <AddTodoForm onAdd={handleAddTodo} />
+            </div>
+
+            {/* 选中日期的待办事项列表 */}
+            <div className="bg-white rounded-lg shadow p-6">
+              <h2 className="text-lg font-semibold text-gray-900 mb-4">
+                {selectedDate.toLocaleDateString()} 的待办事项
+              </h2>
+              <TodoList
+                todos={getSelectedDateTodos()}
+                onToggleComplete={handleToggleComplete}
+                onDelete={handleDelete}
+                onEdit={() => {}} // 暂时不实现编辑功能
+              />
+            </div>
           </div>
         </div>
       </div>
     </main>
   );
-}
