@@ -60,12 +60,12 @@ src/
 ## 数据库设计
 
 ### 表结构
-- \`users\`: 用户信息
-- \`todos\`: 待办事项
-- \`lists\`: 自定义列表
-- \`todo_lists\`: 待办事项与列表关联
-- \`tags\`: 标签
-- \`todo_tags\`: 待办事项与标签关联
+- `users`: 用户信息
+- `todos`: 待办事项
+- `lists`: 自定义列表
+- `todo_lists`: 待办事项与列表关联
+- `tags`: 标签
+- `todo_tags`: 待办事项与标签关联
 
 ## 开发指南
 
@@ -75,53 +75,53 @@ src/
 - PostgreSQL (通过 NeonDB 提供)
 
 ### 环境变量
-创建 \`.env\` 文件并添加以下配置：
-\`\`\`env
+创建 `.env` 文件并添加以下配置：
+```env
 DATABASE_URL="postgresql://user:password@host:port/database?sslmode=require"
-\`\`\`
+```
 
 ### 安装依赖
-\`\`\`bash
+```bash
 npm install
-\`\`\`
+```
 
 ### 数据库迁移
-\`\`\`bash
+```bash
 npx prisma generate   # 生成 Prisma Client
 npx prisma db push    # 同步数据库架构
-\`\`\`
+```
 
 ### 开发服务器
-\`\`\`bash
+```bash
 npm run dev
-\`\`\`
+```
 访问 http://localhost:3000
 
 ### 构建生产版本
-\`\`\`bash
+```bash
 npm run build
 npm start
-\`\`\`
+```
 
 ## API 文档
 
 ### 待办事项 API
-- \`GET /api/todos\` - 获取所有待办事项
-- \`POST /api/todos\` - 创建新待办事项
-- \`PUT /api/todos/:id\` - 更新待办事项
-- \`DELETE /api/todos/:id\` - 删除待办事项
+- `GET /api/todos` - 获取所有待办事项
+- `POST /api/todos` - 创建新待办事项
+- `PUT /api/todos/:id` - 更新待办事项
+- `DELETE /api/todos/:id` - 删除待办事项
 
 ### 列表 API (计划中)
-- \`GET /api/lists\` - 获取所有列表
-- \`POST /api/lists\` - 创建新列表
-- \`PUT /api/lists/:id\` - 更新列表
-- \`DELETE /api/lists/:id\` - 删除列表
+- `GET /api/lists` - 获取所有列表
+- `POST /api/lists` - 创建新列表
+- `PUT /api/lists/:id` - 更新列表
+- `DELETE /api/lists/:id` - 删除列表
 
 ### 标签 API (计划中)
-- \`GET /api/tags\` - 获取所有标签
-- \`POST /api/tags\` - 创建新标签
-- \`PUT /api/tags/:id\` - 更新标签
-- \`DELETE /api/tags/:id\` - 删除标签
+- `GET /api/tags` - 获取所有标签
+- `POST /api/tags` - 创建新标签
+- `PUT /api/tags/:id` - 更新标签
+- `DELETE /api/tags/:id` - 删除标签
 
 ## 部署说明
 
@@ -167,9 +167,9 @@ npm start
 ## 贡献指南
 
 1. Fork 项目
-2. 创建功能分支 (\`git checkout -b feature/AmazingFeature\`)
-3. 提交更改 (\`git commit -m 'Add some AmazingFeature'\`)
-4. 推送到分支 (\`git push origin feature/AmazingFeature\`)
+2. 创建功能分支 (`git checkout -b feature/AmazingFeature`)
+3. 提交更改 (`git commit -m 'Add some AmazingFeature'`)
+4. 推送到分支 (`git push origin feature/AmazingFeature`)
 5. 创建 Pull Request
 
 ## 许可证
