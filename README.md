@@ -40,7 +40,6 @@
 
 ## 项目结构
 
-\`\`\`
 src/
 ├── app/                    # Next.js App Router 目录
 │   ├── api/               # API 路由
@@ -57,7 +56,6 @@ src/
 │   └── prisma.ts        # Prisma 客户端配置
 └── styles/              # 样式文件
     └── globals.css      # 全局样式
-\`\`\`
 
 ## 数据库设计
 
